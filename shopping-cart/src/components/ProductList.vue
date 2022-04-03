@@ -8,14 +8,14 @@
 <script>
 import shop from '@/api/shop.js'
 export default {
-  data () {
-    return {
-      products: []
+  computed: {
+    products () {
+      return this.$store.getters.getProducts
     }
   },
   created () {
     shop.getProducts(products => {
-      this.products = products
+      this.$store.commit('setProducts', products)
     })
   }
 }
