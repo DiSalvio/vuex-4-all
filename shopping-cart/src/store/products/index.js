@@ -1,3 +1,5 @@
+import shop from '../../api/shop.js'
+
 const productsModule = {
   state () {
     return {
@@ -5,12 +7,18 @@ const productsModule = {
     }
   },
   getters: {
-    getProducts (state) {
-      return state.products
+    availableProducts (state) {
+      return state.products.filter(product => product.inventory > 0)
     }
   },
   actions: {
-    fetchProducts () {
+    fetchProducts ({commit}) {
+      return new Promise((resolve) => {
+        shop.getProducts(products => {
+          commit('setProducts', products)
+          resolve()
+        })
+      })
     }
   },
   mutations: {
