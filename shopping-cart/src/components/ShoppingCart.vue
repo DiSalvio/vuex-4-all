@@ -1,34 +1,24 @@
 <template>
-  <img v-if="loading" src="https://i.imgur.com/JfPpwOA.gif">
-  <div v-else v-for="product in products" :key="product.id">
-    <h1>{{ product.title }}</h1>
-    <h2>{{ currency(product.price) }}</h2>
-    <h3>{{ product.inventory }}</h3>
-    <button @click="addProductToCart(product)">Add to Cart</button>
+  <h1>Shopping Cart</h1>
+  <div v-for="product in products" :key="product.id">
+    {{ product.title }} - {{ currency(product.price) }} - {{ product.quantity }}
   </div>
+  <p v-if="total>0">
+    Total: {{ currency(total) }}
+  </p>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-      loading: true
-    }
-  },
   computed: {
     products () {
-      return this.$store.getters.availableProducts
+      return this.$store.getters.cartProducts
+    },
+    total () {
+      return this.$store.getters.cartTotal
     }
   },
-  created () {
-    this.$store.dispatch('fetchProducts')
-      .then(() => this.loading = false)
-  },
   methods: {
-    addProductToCart (product) {
-      this.$store.dispatch('addProductToCart', product)
-        .then(() => this.loading = false)
-    },
     currency (value, currency, decimals) {
       const digitsRE = /(\d{3})(?=\d)/g
       value = parseFloat(value)
