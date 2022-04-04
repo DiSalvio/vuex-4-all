@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -16,22 +17,20 @@ export default {
     }
   },
   computed: {
-    products () {
-      return this.$store.getters.products
-    },
-    productInStock () {
-      return this.$store.getters.productInStock
-    }
+    ...mapGetters({
+      products: 'products',
+      productInStock: 'productInStock'
+    })
   },
   created () {
-    this.$store.dispatch('fetchProducts')
+    this.fetchProducts()
       .then(() => this.loading = false)
   },
   methods: {
-    addProductToCart (product) {
-      this.$store.dispatch('addProductToCart', product)
-        .then(() => this.loading = false)
-    },
+    ...mapActions({
+      fetchProducts: 'fetchProducts',
+      addProductToCart: 'addProductToCart'
+    }),
     currency (value, currency, decimals) {
       const digitsRE = /(\d{3})(?=\d)/g
       value = parseFloat(value)

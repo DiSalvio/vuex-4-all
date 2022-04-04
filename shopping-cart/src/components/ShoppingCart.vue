@@ -11,22 +11,19 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 export default {
   computed: {
-    products () {
-      return this.$store.getters.cartProducts
-    },
-    total () {
-      return this.$store.getters.cartTotal
-    },
-    checkoutStatus () {
-      return this.$store.getters.checkoutStatus
-    }
+    ...mapGetters({
+      products: 'cartProducts',
+      total: 'cartTotal',
+      checkoutStatus: 'checkoutStatus'
+    })
   },
   methods: {
-    checkout () {
-      this.$store.dispatch('checkout')
-    },
+    ...mapActions({
+      checkout: 'checkout'
+    }),
     currency (value, currency, decimals) {
       const digitsRE = /(\d{3})(?=\d)/g
       value = parseFloat(value)
