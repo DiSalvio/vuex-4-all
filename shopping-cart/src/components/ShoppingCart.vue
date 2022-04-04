@@ -6,6 +6,8 @@
   <p v-if="total>0">
     Total: {{ currency(total) }}
   </p>
+  <p v-if="checkoutStatus">{{ checkoutStatus }}</p>
+  <button v-if="total!=0" @click="checkout">Checkout</button>
 </template>
 
 <script>
@@ -16,9 +18,15 @@ export default {
     },
     total () {
       return this.$store.getters.cartTotal
+    },
+    checkoutStatus () {
+      return this.$store.getters.checkoutStatus
     }
   },
   methods: {
+    checkout () {
+      this.$store.dispatch('checkout')
+    },
     currency (value, currency, decimals) {
       const digitsRE = /(\d{3})(?=\d)/g
       value = parseFloat(value)

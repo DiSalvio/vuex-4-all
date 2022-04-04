@@ -4,7 +4,8 @@ const productsModule = {
   state () {
     return {
       products: [],
-      cart: []
+      cart: [],
+      checkoutStatus: null
     }
   },
   getters: {
@@ -22,6 +23,9 @@ const productsModule = {
     },
     cartTotal (state, getters) {
       return getters.cartProducts.reduce((total, product) => total = total + product.price * product.quantity, 0)
+    },
+    checkoutStatus (state) {
+      return state.checkoutStatus
     }
   },
   actions: {
@@ -43,6 +47,21 @@ const productsModule = {
         }
         context.commit('decrementProductInventory', product)
       }
+    },
+    checkout ({state, commit}) {
+      return new Promise((resolve, reject) => {
+        shop.buyProducts(state.cart, 
+          () => {
+            commit('emptyCart')
+            commit('setCheckoutStatus', 'success')
+            resolve()
+          },
+          () => {
+            commit('setCheckoutStatus', 'fail')
+            reject()
+          }
+        )
+      })
     }
   },
   mutations: {
@@ -57,6 +76,12 @@ const productsModule = {
     },
     decrementProductInventory (state, product) {
       product.inventory--
+    },
+    setCheckoutStatus (state, status) {
+      state.checkoutStatus = status
+    },
+    emptyCart (state) {
+      state.cart = []
     }
   }
 }
