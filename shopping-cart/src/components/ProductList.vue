@@ -4,7 +4,7 @@
     <h1>{{ product.title }}</h1>
     <h2>{{ currency(product.price) }}</h2>
     <h3>{{ product.inventory }}</h3>
-    <button @click="addProductToCart(product)">Add to Cart</button>
+    <button :disabled="!productInStock(product)" @click="addProductToCart(product)">Add to Cart</button>
   </div>
 </template>
 
@@ -17,7 +17,10 @@ export default {
   },
   computed: {
     products () {
-      return this.$store.getters.availableProducts
+      return this.$store.getters.products
+    },
+    productInStock () {
+      return this.$store.getters.productInStock
     }
   },
   created () {
